@@ -41,7 +41,7 @@ data class ShoppingItem(
     val id: Int,
     var name: String,
     var quantity: Int,
-    val isEditing: Boolean = false
+    var isEditing: Boolean = false
 )
 
 @Composable
@@ -70,8 +70,24 @@ fun ShoppingListScreen() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            items(shoppingItems) {
-                ShoppingListItem(item = it, {}, {})
+            items(shoppingItems) { item ->
+                if (item.isEditing) {
+                    ShoppingListItemEditor(item) { editedName, editedQuantity ->
+                        val editedItem = shoppingItems.find { it.id == item.id }
+                        editedItem?.let {
+                            editedItem.name = editedName
+                            editedItem.quantity = editedQuantity
+                            editedItem.isEditing = false
+
+                        }
+                    }
+                } else {
+                    ShoppingListItem(item, {
+                        it.isEditing = true
+                    }, {
+                        shoppingItems.remove(it)
+                    })
+                }
             }
         }
     }
@@ -166,9 +182,11 @@ fun ShoppingListItemEditor(item: ShoppingItem, onEditComplete: (String, Int) -> 
                     .padding(8.dp)
             )
         }
-        Button(onClick = { isEditing = false
-            onEditComplete(editedName, editedQuantity.toIntOrNull() ?: 1) }) {
-            Text(text ="Save")
+        Button(onClick = {
+            isEditing = false
+            onEditComplete(editedName, editedQuantity.toIntOrNull() ?: 1)
+        }) {
+            Text(text = "Save")
         }
     }
 }
