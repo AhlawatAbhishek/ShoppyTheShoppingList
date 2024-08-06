@@ -32,10 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShoppyTheShoppingListTheme {
-                Surface(color = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.fillMaxSize()
-                    ) {
-                        ShoppingListScreen()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->ShoppingListScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
