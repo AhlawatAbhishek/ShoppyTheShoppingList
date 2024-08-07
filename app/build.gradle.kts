@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
-
+//AIzaSyAIKayV7WsVAJrd6GDxZgQUNMVlVvkjpJo
 android {
     namespace = "com.mayurappstudios.shoppytheshoppinglist"
     compileSdk = 34
