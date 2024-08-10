@@ -159,70 +159,6 @@ fun ShoppingListApp(
             }
         }
     }
-
-//    if (showDialog) {
-//        AlertDialog(
-//            onDismissRequest = { showDialog = false },
-//            title = { Text("Add Shopping Item") },
-//            text = {
-//                Column {
-//                    OutlinedTextField(
-//                        value = itemName,
-//                        onValueChange = { itemName = it },
-//                        singleLine = true,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(8.dp),
-//                        label = { Text("Item Name") }
-//                    )
-//
-//                    OutlinedTextField(
-//                        value = itemQuantity,
-//                        onValueChange = {
-//                            itemQuantity = it
-//
-//                        },
-//                        singleLine = true,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(8.dp),
-//                        label = { Text("Quantity") }
-//                    )
-//                }
-//            },
-//            confirmButton = {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(8.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                ) {
-//                    Button(
-//                        onClick = {
-//                            if (itemName.isNotBlank()) {
-//                                val newItem = ShoppingItem(
-//                                    id = shoppingItems.size + 1,
-//                                    name = itemName,
-//                                    quantity = itemQuantity.toIntOrNull() ?: 1
-//                                )
-//                                shoppingItems = shoppingItems + newItem
-//                                showDialog = false
-//                            }
-//                            itemName = ""
-//                            itemQuantity = ""
-//                        }
-//                    ) {
-//                        Text("Add")
-//                    }
-//                    Button(
-//                        onClick = { showDialog = false }
-//                    ) {
-//                        Text("Cancel")
-//                    }
-//                }
-//            }
-//        )
-//    }
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
@@ -252,12 +188,19 @@ fun ShoppingListApp(
                     Button(onClick = {
                         if (locationUtils.hasLocationPermission(context)) {
                             locationUtils.requestLocationUpdates(viewModel)
-                            navController.navigate("locationScreen"){
+                            navController.navigate("locationScreen") {
                                 this.launchSingleTop
                             }
+                        } else {
+                            requestPermissionLauncher.launch(
+                                arrayOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                                )
+                            )
                         }
                     }) {
-
+                        Text("Address")
                     }
                 }
             },
