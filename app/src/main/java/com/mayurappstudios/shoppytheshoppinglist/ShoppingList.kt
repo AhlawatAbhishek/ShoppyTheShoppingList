@@ -1,6 +1,11 @@
 package com.mayurappstudios.shoppytheshoppinglist
 
+import android.Manifest
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +23,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,22 +41,82 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.navigation.NavController
 
 data class ShoppingItem(
     val id: Int,
     var name: String,
     var quantity: Int,
-    var isEditing: Boolean = false
+    var isEditing: Boolean = false,
+    var isExpanded: Boolean = false,
+    var address: String? = null
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier) {
+fun ShoppingListApp(
+    modifier: Modifier = Modifier,
+    locationUtils: LocationUtils,
+    locationViewModel: LocationViewModel,
+    navController: NavController,
+    context: Context,
+    viewModel: LocationViewModel,
+    address: String? = null
+) {
     var shoppingItems by remember { mutableStateOf(listOf<ShoppingItem>()) }
     var itemName by remember { mutableStateOf("") }
     var itemQuantity by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
-
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+            onResult = { permissions ->
+                if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true && permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+                    //Permission granted, update the location
+                    Toast.makeText(context, "Fine Location permission Granted", Toast.LENGTH_SHORT)
+                        .show()
+                    locationUtils.requestLocationUpdates(viewModel)
+                } else {
+                    //Permission denied
+                    val rationaleRequired = shouldShowRequestPermissionRationale(
+                        context as MainActivity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) || shouldShowRequestPermissionRationale(
+                        context as MainActivity,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                    if (rationaleRequired) {
+                        if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
+                            Toast.makeText(
+                                context,
+                                "The app will work better on fine app location permission",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        else Toast.makeText(
+                            context,
+                            "Location Permission Denied. \nPlease allow from Android settings.",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    } else {
+                        if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
+                            Toast.makeText(
+                                context,
+                                "The app will work better on fine app location permission",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        else Toast.makeText(
+                            context,
+                            "Location Permission Denied. \nPlease allow from Android settings.",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
+                }
+            })
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -182,6 +248,17 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
                             .padding(8.dp),
                         label = { Text("Quantity") }
                     )
+
+                    Button(onClick = {
+                        if (locationUtils.hasLocationPermission(context)) {
+                            locationUtils.requestLocationUpdates(viewModel)
+                            navController.navigate("locationScreen"){
+                                this.launchSingleTop
+                            }
+                        }
+                    }) {
+
+                    }
                 }
             },
             confirmButton = {
@@ -198,7 +275,10 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
                                     id = shoppingItems.size + 1,
                                     name = itemName,
                                     quantity = itemQuantity.toIntOrNull() ?: run {
-                                        Log.e("ShoppingList", "Invalid quantity input: $itemQuantity")
+                                        Log.e(
+                                            "ShoppingList",
+                                            "Invalid quantity input: $itemQuantity"
+                                        )
                                         1
                                     }
                                 )
@@ -222,6 +302,20 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ShoppingLIstItemPreview() {
+    ShoppingListItem(
+        item = ShoppingItem(
+            id = 1,
+            name = "Milk",
+            quantity = 1
+        ),
+        onEditClick = {},
+        onDeleteClick = {}
+    )
+}
+
 @Composable
 fun ShoppingListItem(
     item: ShoppingItem,
@@ -239,8 +333,21 @@ fun ShoppingListItem(
 
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = item.name, modifier = Modifier.padding(8.dp))
-        Text(text = "Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(8.dp)
+        ) {
+            Row {
+                Text(text = item.name, modifier = Modifier.padding(8.dp))
+                Text(text = "Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
+
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
+                Text(text = item.address ?: "No address", modifier = Modifier.padding(8.dp))
+            }
+        }
         Row(
             modifier = Modifier
                 .padding(8.dp)
@@ -304,5 +411,5 @@ fun ShoppingItemEditor(item: ShoppingItem, onEditComplete: (String, Int) -> Unit
 @Preview
 @Composable
 fun ShoppingListPreview() {
-    ShoppingListScreen()
+//    ShoppingListApp()
 }

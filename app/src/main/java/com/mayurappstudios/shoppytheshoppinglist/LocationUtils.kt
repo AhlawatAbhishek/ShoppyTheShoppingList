@@ -17,7 +17,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import java.util.Locale
 
-class LocationUtils(val context: Context) {
+class  LocationUtils(val context: Context) {
     private val _fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
