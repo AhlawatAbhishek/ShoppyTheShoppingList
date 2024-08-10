@@ -9,19 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
-fun LocationSelectionScreen(modifier: Modifier = Modifier,
+fun LocationSelectionScreen(
+    modifier: Modifier = Modifier,
     locationData: LocationData,
     onLocationSelected: (LocationData) -> Unit
 ) {
-    val userLocation by remember {
+    var userLocation by remember {
         mutableStateOf(
             LatLng(
                 locationData.latitude,
@@ -29,15 +33,29 @@ fun LocationSelectionScreen(modifier: Modifier = Modifier,
             )
         )
     }
-    var cameraPositionState = rememberCameraPositionState {
+    val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(userLocation, 10f)
     }
     Column(modifier = modifier.fillMaxSize()) {
-         GoogleMap(modifier = Modifier.weight(1f).padding(top=16.dp)){
+        GoogleMap(
+            onMapClick = {
+                userLocation = it
 
-         }
-        Button(onClick = {/**/}){
-             Text("Select Location")
+            },
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 16.dp),
+            cameraPositionState = cameraPositionState
+        ) {
+            Marker(state = MarkerState(position = userLocation))
         }
+        var newLocation: LocationData
+        Button(onClick = {
+            newLocation = LocationData(userLocation.latitude, userLocation.longitude)
+            onLocationSelected(newLocation)
+        }) {
+            Text("Select Location")
+        }
+
     }
 }
