@@ -142,6 +142,8 @@ fun ShoppingListApp(
                             editedItem?.let {
                                 it.name = editedName
                                 it.quantity = editedQuantity
+                                it.address = address
+                                Log.d("Location", "Address: $address")
                             }
                         }
                     )
@@ -187,7 +189,7 @@ fun ShoppingListApp(
                     Button(onClick = {
                         if (locationUtils.hasLocationPermission(context)) {
                             locationUtils.requestLocationUpdates(viewModel)
-                            navController.navigate("locationScreen") {
+                            navController.navigate("locationselectionscreen") {
                                 this.launchSingleTop
                             }
                         } else {
@@ -222,7 +224,8 @@ fun ShoppingListApp(
                                             "Invalid quantity input: $itemQuantity"
                                         )
                                         1
-                                    }
+                                    },
+                                    address = address
                                 )
                                 shoppingItems = shoppingItems + newItem
                                 showDialog = false

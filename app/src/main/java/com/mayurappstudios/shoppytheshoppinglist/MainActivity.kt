@@ -51,6 +51,7 @@ fun Navigation( modifier: Modifier =Modifier){
            backstackEntry -> viewModel.location.value?.let {locationData->
                LocationSelectionScreen(modifier, locationData, onLocationSelected = {
                    viewModel.fetchAddress("${locationData.latitude},${locationData.longitude}")
+                   navController.popBackStack()
                })
         }
         }
