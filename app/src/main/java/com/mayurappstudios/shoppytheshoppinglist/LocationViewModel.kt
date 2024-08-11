@@ -1,17 +1,30 @@
 package com.mayurappstudios.shoppytheshoppinglist
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class LocationViewModel : ViewModel(){
+class LocationViewModel : ViewModel() {
     private val _location = mutableStateOf<LocationData?>(null)
     val location: State<LocationData?> = _location
-    fun updateLocation(newLocation: LocationData){
+    private val _address = mutableStateOf(listOf<GeoCodingResult>())
+    val address: State<List<GeoCodingResult>> = _address
+    fun updateLocation(newLocation: LocationData) {
         _location.value = newLocation
     }
-    fun updateAddress(newAddress: String){
-        _location.value = _location.value?.copy(address = newAddress)
-    }
 
+    fun fetchAddress(latlng: String) {
+        try {
+            viewModelScope.launch {
+                val result = com.mayurappstudios.shoppytheshoppinglist.RetrofitClient.create()
+                    .getAddressFromCoordinates(latlng, apiKey = "@string/google_maps_key")
+                _address.value = result.results
+            }
+        } catch (e: Exception) {
+            Log.d("res1", "${e.cause} ${e.message}")
+        }
+    }
 }
