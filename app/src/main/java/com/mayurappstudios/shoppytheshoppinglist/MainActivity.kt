@@ -9,7 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.mayurappstudios.shoppytheshoppinglist.ui.theme.ShoppyTheShoppingListTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +27,18 @@ class MainActivity : ComponentActivity() {
                     ShoppingListApp(modifier = Modifier.padding(innerPadding))
                 }
             }
+        }
+    }
+}
+@Composable
+fun Navigation(){
+    val navController = rememberNavController()
+    val viewModel : LocationViewModel = viewModel()
+    val context = LocalContext.current
+    val locationUtils = LocationUtils(context)
+    NavHost(navController, startDestination="shoppinglistscreen"){
+        composable("shoppinglistscreen"){
+            ShoppingListApp()
         }
     }
 }

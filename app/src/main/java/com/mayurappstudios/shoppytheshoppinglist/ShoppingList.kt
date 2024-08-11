@@ -58,7 +58,6 @@ data class ShoppingItem(
 fun ShoppingListApp(
     modifier: Modifier = Modifier,
     locationUtils: LocationUtils,
-    locationViewModel: LocationViewModel,
     navController: NavController,
     context: Context,
     viewModel: LocationViewModel,
