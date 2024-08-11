@@ -30,7 +30,7 @@ class  LocationUtils(val context: Context) {
                     val locationData = LocationData(it.latitude, it.longitude)
                     viewModel.updateLocation(locationData)
                     val address = reverseGeocodeLocation(locationData)
-                    viewModel.updateAddress(address)
+//                    viewModel.updateAddress(address)
                 }
             }
         }

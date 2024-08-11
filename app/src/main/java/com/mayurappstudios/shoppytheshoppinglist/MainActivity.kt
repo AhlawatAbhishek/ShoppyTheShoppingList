@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.mayurappstudios.shoppytheshoppinglist.ui.theme.ShoppyTheShoppingListTheme
 
@@ -24,21 +25,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShoppyTheShoppingListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ShoppingListApp(modifier = Modifier.padding(innerPadding))
+                    Navigation(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 @Composable
-fun Navigation(){
+fun Navigation( modifier: Modifier =Modifier){
     val navController = rememberNavController()
     val viewModel : LocationViewModel = viewModel()
     val context = LocalContext.current
     val locationUtils = LocationUtils(context)
     NavHost(navController, startDestination="shoppinglistscreen"){
         composable("shoppinglistscreen"){
-            ShoppingListApp()
+            ShoppingListApp(modifier ,
+                locationUtils ,
+                navController ,
+                context ,
+                viewModel,
+                address = viewModel.address.value.firstOrNull()?.formatted_address ?: "No Address Found"
+                )
+        }
+        dialog("locationselectionscreen"){
+           backstackEntry -> viewModel.location.value?.let {locationData->
+               LocationSelectionScreen(modifier, locationData, onLocationSelected = {
+                   viewModel.fetchAddress("${locationData.latitude},${locationData.longitude}")
+               })
+        }
         }
     }
 }
@@ -48,6 +62,6 @@ fun Navigation(){
 @Composable
 fun ShoppingListScreenPreview() {
     ShoppyTheShoppingListTheme {
-        ShoppingListApp()
+//        ShoppingListApp()
     }
 }
