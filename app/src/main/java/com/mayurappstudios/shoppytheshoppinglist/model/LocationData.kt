@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.model
 
 data class LocationData(
     val latitude: Double = 0.0,

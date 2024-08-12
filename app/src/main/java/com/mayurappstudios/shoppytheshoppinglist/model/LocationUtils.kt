@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.model
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
+import com.mayurappstudios.shoppytheshoppinglist.viewmodel.LocationViewModel
 import java.util.Locale
 
 class  LocationUtils(val context: Context) {

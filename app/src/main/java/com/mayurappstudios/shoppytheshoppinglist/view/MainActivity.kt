@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.mayurappstudios.shoppytheshoppinglist.model.LocationUtils
 import com.mayurappstudios.shoppytheshoppinglist.ui.theme.ShoppyTheShoppingListTheme
+import com.mayurappstudios.shoppytheshoppinglist.viewmodel.LocationViewModel
+
 //ddd
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

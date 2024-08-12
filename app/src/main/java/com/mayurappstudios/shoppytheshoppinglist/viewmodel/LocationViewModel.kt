@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -6,6 +6,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mayurappstudios.shoppytheshoppinglist.R
+import com.mayurappstudios.shoppytheshoppinglist.model.GeoCodingResult
+import com.mayurappstudios.shoppytheshoppinglist.model.LocationData
+import com.mayurappstudios.shoppytheshoppinglist.model.RetrofitClient
 import kotlinx.coroutines.launch
 
 class LocationViewModel(application: Application) : AndroidViewModel(application) {
@@ -24,7 +28,7 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     fun fetchAddress(latlng: String) {
         try {
             viewModelScope.launch {
-                val result = com.mayurappstudios.shoppytheshoppinglist.RetrofitClient.create()
+                val result = RetrofitClient.create()
                     .getAddressFromCoordinates(latlng, apiKey)
                 _address.value = result.results
                 Log.d("res1---------------------------------------------", "${result.results.size}  + ${apiKey}")

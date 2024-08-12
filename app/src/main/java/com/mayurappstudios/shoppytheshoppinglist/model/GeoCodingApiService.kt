@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.model
 
 import retrofit2.http.GET
 import retrofit2.http.Query

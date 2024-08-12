@@ -1,4 +1,4 @@
-package com.mayurappstudios.shoppytheshoppinglist
+package com.mayurappstudios.shoppytheshoppinglist.view
 
 import android.Manifest
 import android.content.Context
@@ -43,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.navigation.NavController
+import com.mayurappstudios.shoppytheshoppinglist.model.LocationUtils
+import com.mayurappstudios.shoppytheshoppinglist.viewmodel.LocationViewModel
 
 data class ShoppingItem(
     val id: Int,
