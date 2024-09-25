@@ -2,3 +2,4 @@
     <string name="app_name">ShoppyTheShoppingList</string>
     <string name="google_maps_key" translatable="false">AIzaSyAIKayV7WsVAJrd6GDxZgQUNMVlVvkjpJo</string>
 </resources>
+<!--This key has been changed for security reasons. To fetch the key from Google Cloud Console, go to the API & Services > Credentials > Create Credentials > API Key. Copy the key and paste it in the AndroidManifest.xml file.-->
